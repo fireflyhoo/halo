@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "run.halo.app"
-version = "1.3.0"
+version = "1.3.1"
 description = "Halo, An excellent open source blog publishing application."
 
 java {
@@ -39,10 +39,15 @@ configurations {
     }
 }
 
-bootJar {
-    manifest {
-        attributes("Implementation-Title": "Halo Application",
-                "Implementation-Version": archiveVersion)
+
+springBoot {
+    buildInfo()
+}
+
+// gradle 的 Property Expansion 的占位符 ${..} 与 springboot 的占位符 冲突， springboot 的需要转义 \${..}
+processResources {
+    filesMatching("application.yaml") {
+        expand(project.properties)
     }
 }
 
@@ -65,8 +70,9 @@ ext {
     h2Version =  "1.4.196"
     levelDbVersion =  "0.12"
     jsonVersion =  "20190722"
-    fastJsonVersion =  "1.2.66"
+    fastJsonVersion =  "1.2.67"
     annotationsVersion = "3.0.1"
+    zxingVersion = "3.4.0"
 }
 
 dependencies {
@@ -115,6 +121,8 @@ dependencies {
 
     implementation "org.json:json:$jsonVersion"
     implementation "com.alibaba:fastjson:$fastJsonVersion"
+
+    implementation "com.google.zxing:core:$zxingVersion"
 
     implementation "org.iq80.leveldb:leveldb:$levelDbVersion"
     runtimeOnly "com.h2database:h2:$h2Version"
